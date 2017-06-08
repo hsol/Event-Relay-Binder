@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="src/jquery.form.data.ext.js"></script>
+</head>
+<body>
+<form data-actions="confirm submit" data-confirm="confirm show message">
+  <button>test</button>
+</form>
+<script>
+  $('form').formDataExtension('submit', true);
+</script>
+</body>
+</html>
