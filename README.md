@@ -1,2 +1,2 @@
-# jQuery-Form-Data-Extension
+# Form-Data-Extension
 form extension with data attribute
