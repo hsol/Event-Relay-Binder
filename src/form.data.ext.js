@@ -100,7 +100,7 @@ window.FormDataExtension = function () {
       actions.every(function (actionType, index) {
         var actionEvent = _actions[actionType];
         var rawResponse = [false, 'Unknown Error!'];
-        var response = false;
+        var response = new _responseDto();
 
         if (actionType === 'submit'
           && event.currentTarget.tagName.toUpperCase() === 'FORM'
