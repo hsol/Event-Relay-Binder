@@ -11,40 +11,57 @@ var closest = function (el, selector) {
 };
 
 window.FormDataExtension = function () {
+  var _actionListener = new Function();
+  var _actionDto = function (index, type, action, responseDto) {
+    return {
+      index: index,
+      type: type,
+      action: action,
+      time: new Date(),
+      response: responseDto
+    };
+  };
+  var _responseDto = function (isPassed, message) {
+    return {
+      isPassed: isPassed === true,
+      message: message || ''
+    };
+  };
+
   var _actions = {
     alert: function (event) {
       var dataAlert = event.currentTarget.getAttribute('data-alert');
       if (!dataAlert) {
-        return true;
+        return [true, 'Could not find data-alert attribute.'];
       }
 
       alert(dataAlert);
 
-      return true;
+      return [true];
     },
     confirm: function (event) {
       var dataConfirm = event.currentTarget.getAttribute('data-confirm');
       if (!dataConfirm) {
-        return true;
+        return [true, 'Could not find data-confirm attribute.'];
       }
 
       if (!confirm(dataConfirm)) {
         event.preventDefault();
-        return false;
+        return [false, 'Canceled.'];
       }
 
-      return true;
+      return [true];
     },
     submit: function (event) {
       var $targetForm = closest(event.currentTarget, 'form');
       if ($targetForm.length === 0) {
-        return true;
+        return [true, 'Could not find form to submit'];
       }
 
       event.preventDefault();
       $targetForm.submit();
 
-      return true;
+      return [true];
     },
     clear: function (event) {
       var elementsWithData = closest(event.currentTarget, 'form').querySelectorAll('[name]');
@@ -52,7 +69,7 @@ window.FormDataExtension = function () {
         element.value = null;
       });
 
-      return true;
+      return [true];
     }
   };
 
@@ -73,23 +90,41 @@ window.FormDataExtension = function () {
       delete _actions[action];
       return true;
     },
+    onAction: function (callable) {
+      _actionListener = callable;
+    },
     eventListener: function (event) {
       var eventResponse = false;
       var actions = (event.currentTarget.getAttribute('data-actions') || '').split(' ');
 
-      actions.every(function (action) {
-        var actionEvent = _actions[action];
-        if (action === 'submit' && event.currentTarget.tagName.toUpperCase() === 'FORM' && action.type === action) {
+      actions.every(function (actionType, index) {
+        var actionEvent = _actions[actionType];
+        var rawResponse = [false, 'Unknown Error!'];
+        var response = false;
+
+        if (actionType === 'submit'
+          && event.currentTarget.tagName.toUpperCase() === 'FORM'
+          && event.type === actionType
+        ) {
           eventResponse = true;
           return false;
         }
 
         if (!actionEvent) {
-          window.console.warn('[Form-Data-Extension] Can not find action type: ' + action);
+          window.console.warn('[Form-Data-Extension] Can not find action type: ' + actionType);
           return true;
         }
 
-        return actionEvent(event);
+        try {
+          rawResponse = actionEvent(event);
+        } catch (error) {
+          rawResponse = [false, error.message];
+        }
+
+        response = _responseDto.apply(null, rawResponse);
+        _actionListener(new _actionDto(index, actionType, actionEvent, response));
+
+        return response.isPassed;
       });
 
       return eventResponse;
