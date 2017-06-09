@@ -73,7 +73,7 @@ window.FormDataExtension = function () {
       delete _actions[action];
       return true;
     },
-    event: function (event) {
+    eventListener: function (event) {
       var eventResponse = false;
       var actions = (event.currentTarget.getAttribute('data-actions') || '').split(' ');
 
