@@ -11,7 +11,7 @@ var closest = function (el, selector) {
 };
 
 window.FormDataExtension = function () {
-  var localActions = {
+  var defaultActions = {
     alert: function (event) {
       var dataAlert = event.currentTarget.getAttribute('data-alert');
       if (!dataAlert) {
@@ -55,19 +55,16 @@ window.FormDataExtension = function () {
       return true;
     }
   };
+  var _actions = defaultActions;
 
   return {
-    _eventType: null,
     event: function (event) {
-      var _ = this;
       var eventResponse = false;
       var actions = (event.currentTarget.getAttribute('data-actions') || '').split(' ');
 
-      this._eventType = event.type;
-
       actions.every(function (action) {
-        var actionEvent = localActions[action];
-        if (action === 'submit' && event.currentTarget.tagName.toUpperCase() === 'FORM' && _._eventType === action) {
+        var actionEvent = _actions[action];
+        if (action === 'submit' && event.currentTarget.tagName.toUpperCase() === 'FORM' && action.type === action) {
           eventResponse = true;
           return false;
         }
