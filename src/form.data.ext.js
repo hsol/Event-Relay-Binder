@@ -11,7 +11,17 @@ var closest = function (el, selector) {
 };
 
 window.FormDataExtension = function () {
-  var localEvents = {
+  var localActions = {
+    alert: function (event) {
+      var dataAlert = event.currentTarget.getAttribute('data-alert');
+      if (!dataAlert) {
+        return true;
+      }
+
+      alert(dataAlert);
+
+      return true;
+    },
     confirm: function (event) {
       var dataConfirm = event.currentTarget.getAttribute('data-confirm');
       if (!dataConfirm) {
@@ -56,12 +66,18 @@ window.FormDataExtension = function () {
       this._eventType = event.type;
 
       actions.every(function (action) {
+        var actionEvent = localActions[action];
         if (action === 'submit' && event.currentTarget.tagName.toUpperCase() === 'FORM' && _._eventType === action) {
           eventResponse = true;
           return false;
         }
 
-        return localEvents[action](event);
+        if (!actionEvent) {
+          window.console.warn('[Form-Data-Extension] Can not find action type: ' + action);
+          return true;
+        }
+
+        return actionEvent(event);
       });
 
       return eventResponse;
