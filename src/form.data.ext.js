@@ -10,6 +10,22 @@ var closest = function (el, selector) {
   return el;
 };
 
+var objectFilter = function (object, callable) {
+  var newObject = {};
+
+  if (callable === undefined) {
+    throw new Error('Could not find callable.');
+  }
+
+  for (var key in object) {
+    if (callable(object[key], key, object)) {
+      newObject[key] = object[key];
+    }
+  }
+
+  return newObject;
+};
+
 window.FormDataExtension = function () {
   var _actionListener = new Function();
   var _actionDto = function (index, type, action, responseDto) {
@@ -86,12 +102,16 @@ window.FormDataExtension = function () {
       _actions[action] = callable;
       return true;
     },
-    removeAction: function (action) {
-      if (!_actions[action]) {
-        window.console.error('[Form-Data-Extension] Can not find action type: ' + action);
+    removeAction: function (actionToRemove) {
+      if (!_actions[actionToRemove]) {
+        window.console.error('[Form-Data-Extension] Can not find action type: ' + actionToRemove);
         return false;
       }
-      delete _actions[action];
+
+      _actions = objectFilter(_actions, function (action, key) {
+        return key !== actionToRemove;
+      });
+
       return true;
     },
     onAction: function (callable) {
