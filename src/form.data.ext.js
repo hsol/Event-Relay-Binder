@@ -53,6 +53,10 @@ window.FormDataExtension = function () {
       return [true];
     },
     submit: function (event) {
+      if (event.currentTarget.tagName.toUpperCase() === 'FORM') {
+        return [true];
+      }
+
       var $targetForm = closest(event.currentTarget, 'form');
       if ($targetForm.length === 0) {
         return [true, 'Could not find form to submit'];
@@ -102,14 +106,6 @@ window.FormDataExtension = function () {
         var rawResponse = [false, 'Unknown Error!'];
         var response = new _responseDto();
 
-        if (actionType === 'submit'
-          && event.currentTarget.tagName.toUpperCase() === 'FORM'
-          && event.type === actionType
-        ) {
-          eventResponse = true;
-          return false;
-        }
-
         if (!actionEvent) {
           window.console.warn('[Form-Data-Extension] Can not find action type: ' + actionType);
           return true;
@@ -124,7 +120,7 @@ window.FormDataExtension = function () {
         response = _responseDto.apply(null, rawResponse);
         _actionListener(new _actionDto(index, actionType, actionEvent, response));
 
-        return response.isPassed;
+        return eventResponse = response.isPassed;
       });
 
       return eventResponse;
