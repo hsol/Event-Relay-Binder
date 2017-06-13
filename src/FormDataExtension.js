@@ -14,7 +14,15 @@ var objectFilter = function (object, callable) {
   return newObject;
 };
 
-window.FormDataExtension = function () {
+var initActions = function (isGlobal) {
+  if (!FormDataExtension.__proto__._actions) {
+    FormDataExtension.__proto__._actions = {};
+  }
+
+  return isGlobal ? FormDataExtension.__proto__._actions : {};
+};
+
+window.FormDataExtension = function (isGlobal) {
   var _actionListener = new Function();
   var _actionDto = function (index, type, action, responseDto) {
     return {
@@ -32,7 +40,7 @@ window.FormDataExtension = function () {
     };
   };
 
-  var _actions = {};
+  var _actions = initActions(isGlobal === true);
 
   return {
     addAction: function (action, callable) {
@@ -56,7 +64,7 @@ window.FormDataExtension = function () {
       return true;
     },
     on: function (eventType, callable) {
-      if(typeof eventType === 'function') {
+      if (typeof eventType === 'function') {
         _actionListener = callable;
       }
     },
