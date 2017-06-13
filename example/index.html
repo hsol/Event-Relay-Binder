@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta property="og:title" content="Form Data Extension">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="http://hsol.github.io/form-data-extension">
+    <meta property="og:description" content="Use unlimited form tag with Form Data Extension.">
+    <script src="../src/FormDataExtension.js"></script>
+    <style>
+        header, section, article, footer {
+            display: block;
+        }
+
+        * {
+            font-size: 14pt;
+            font-family: 'Titillium Web', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #FFF;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 0.1em rgba(0, 0, 0, 1);
+        }
+
+        h2 {
+            font-size: 1em;
+            color: #FFF;
+        }
+
+        a {
+            color: #FFF;
+        }
+
+        body {
+            background: url("./img/background.jpg");
+            background-size: 30em 30em;
+            text-align: center;
+        }
+
+        input[type=text] {
+            padding: 0.5em 1em 0.5em 1em;
+        }
+
+        .head_holder {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-align: left;
+            padding: 0.5em 1em 0.5em 1em;
+
+            background-color: #0F0F0F;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #FFF;
+        }
+
+        .head_holder a {
+            color: #FFF;
+            text-decoration: none;
+        }
+
+        .panel {
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+        }
+
+        .panel:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #0F0F0F;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        section.article {
+            width: 100%;
+            max-width: 35em;
+            margin: 0 auto;
+        }
+
+        section.article input {
+            width: 100%;
+            display: block;
+        }
+
+        section.article .input_button {
+            width: 100%;
+            font-size: 1.2em;
+            padding: 0.5em 1em 0.5em 1em;
+            margin-bottom: 1em;
+            background-color: #FFF;
+            box-shadow: none;
+            border: 1px solid #4aa3df;
+            color: #4aa3df;
+            font-weight: bold;
+        }
+
+        section.article .input_button:hover {
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            height: 8em;
+            max-width: 35em;
+            padding: 0.5em 1em 0.5em 1em;
+        }
+    </style>
+</head>
+<body>
+
+<header class="head_holder"><a href="https://github.com/hsol/giant-cookie">< back to GitHub</a></header>
+<section class="panel">
+    <header>
+        <h1>Form Data Extension example</h1>
+    </header>
+</section>
+<footer><h2>Copyright 2016. <a href="https://github.com/hsol">HansolLim</a> all rights reserved.</h2></footer>
+</body>
+<script>
+  window.onload = function (event) {
+    verticalCenter();
+  };
+  window.onresize = function (event) {
+    verticalCenter();
+  };
+  function verticalCenter() {
+    document.getElementsByClassName("panel")[0].style.marginTop = (window.innerHeight - document.getElementsByClassName("panel")[0].clientHeight) / 2 + "px";
+  }
+</script>
+</html>
