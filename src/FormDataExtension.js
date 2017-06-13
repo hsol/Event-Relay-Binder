@@ -14,7 +14,7 @@ var objectFilter = function (object, callable) {
   return newObject;
 };
 
-window.EventRelayBinder = function () {
+window.FormDataExtension = function () {
   var _actionListener = new Function();
   var _actionDto = function (index, type, action, responseDto) {
     return {
