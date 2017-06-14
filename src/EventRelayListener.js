@@ -1,4 +1,4 @@
-var objectFilter = function (object, callable) {
+var objectReject = function (object, callable) {
   if (callable === undefined) {
     throw new Error('[EventRelayListener] Could not find callable.');
   }
@@ -42,8 +42,8 @@ window.EventRelayListener = function (isGlobal) {
 
   return {
     initActions: function (actions) {
-      _actions = objectFilter(_actions, function () {
-        return false;
+      _actions = objectReject(_actions, function () {
+        return true;
       });
 
       for(var key in actions) {
@@ -63,8 +63,8 @@ window.EventRelayListener = function (isGlobal) {
         throw new Error('[EventRelayListener] Can not find action type: ' + actionToRemove);
       }
 
-      _actions = objectFilter(_actions, function (action, key) {
-        return key !== actionToRemove;
+      _actions = objectReject(_actions, function (action, key) {
+        return key === actionToRemove;
       });
 
       return true;
