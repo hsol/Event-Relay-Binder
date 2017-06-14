@@ -1,17 +1,15 @@
 var objectFilter = function (object, callable) {
-  var newObject = {};
-
   if (callable === undefined) {
     throw new Error('[EventRelayListener] Could not find callable.');
   }
 
   for (var key in object) {
     if (callable(object[key], key, object)) {
-      newObject[key] = object[key];
+      delete object[key];
     }
   }
 
-  return newObject;
+  return object;
 };
 
 var initActions = function (isGlobal) {
@@ -43,6 +41,16 @@ window.EventRelayListener = function (isGlobal) {
   var _actions = initActions(isGlobal === true);
 
   return {
+    initActions: function (actions) {
+      _actions = objectFilter(_actions, function () {
+        return false;
+      });
+
+      for(var key in actions) {
+        _actions[key] = actions[key];
+      }
+      return true;
+    },
     addAction: function (action, callable) {
       if (_actions[action]) {
         throw new Error('[EventRelayListener] Action already exists.');
