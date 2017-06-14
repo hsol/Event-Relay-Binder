@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400" rel="stylesheet" type="text/css">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <script src="../src/EventRelayListener.js"></script>
+    <link href="example/css/style.css" rel="stylesheet" type="text/css">
+    <script src="src/EventRelayListener.js"></script>
 </head>
 <body>
 <header id="header"><a href="https://hsol.github,io/event-relay-listener">< back to GitHub</a></header>
@@ -27,13 +27,13 @@
         </div>
         <div class="panel">
             <h1>Example</h1>
-            <h3>Double confirm before submit(<a href="./example.html"><i>go to example</i></a>).</h3>
+            <h3>Double confirm before submit(<a href="example/example.html"><i>go to example</i></a>).</h3>
             <h4>Code<i>(formDataExtension.js)</i></h4>
             <pre><code class="js">
                 var eventRelayListener = new EventRelayListener(true);
                 eventRelayListener.setAttr('data-actions');
                 eventRelayListener.addAction('confirm', function (event) {
-                  var confirmMessage = event.currentTarget.getAttribute('data-confirm-text');
+                  var confirmMessage = event.currentTarget.getAttribute('data-actions');
                   if (!confirm(confirmMessage)) {
                     event.preventDefault();
                     return false;
