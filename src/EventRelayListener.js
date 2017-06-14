@@ -2,7 +2,7 @@ var objectFilter = function (object, callable) {
   var newObject = {};
 
   if (callable === undefined) {
-    throw new Error('Could not find callable.');
+    throw new Error('[EventRelayListener] Could not find callable.');
   }
 
   for (var key in object) {
@@ -15,14 +15,14 @@ var objectFilter = function (object, callable) {
 };
 
 var initActions = function (isGlobal) {
-  if (!FormDataExtension.__proto__._actions) {
-    FormDataExtension.__proto__._actions = {};
+  if (!EventRelayListener.__proto__._actions) {
+    EventRelayListener.__proto__._actions = {};
   }
 
-  return isGlobal ? FormDataExtension.__proto__._actions : {};
+  return isGlobal ? EventRelayListener.__proto__._actions : {};
 };
 
-window.FormDataExtension = function (isGlobal) {
+window.EventRelayListener = function (isGlobal) {
   var _actionListener = new Function();
   var _actionDto = function (index, type, action, responseDto) {
     return {
@@ -45,16 +45,14 @@ window.FormDataExtension = function (isGlobal) {
   return {
     addAction: function (action, callable) {
       if (_actions[action]) {
-        window.console.error('[EventRelayBinder] Action already exists.');
-        return false;
+        throw new Error('[EventRelayListener] Action already exists.');
       }
       _actions[action] = callable;
       return true;
     },
     removeAction: function (actionToRemove) {
       if (!_actions[actionToRemove]) {
-        window.console.error('[EventRelayBinder] Can not find action type: ' + actionToRemove);
-        return false;
+        throw new Error('[EventRelayListener] Can not find action type: ' + actionToRemove);
       }
 
       _actions = objectFilter(_actions, function (action, key) {
@@ -78,7 +76,7 @@ window.FormDataExtension = function (isGlobal) {
         var response = new _responseDto();
 
         if (!actionEvent) {
-          window.console.warn('[EventRelayBinder] Can not find action type: ' + actionType);
+          window.console.warn('[EventRelayListener] Can not find action type: ' + actionType);
           return true;
         }
 
