@@ -7,137 +7,184 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="http://hsol.github.io/form-data-extension">
     <meta property="og:description" content="Use unlimited form tag with Form Data Extension.">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
     <script src="../src/EventRelayListener.js"></script>
-    <style>
-        header, section, article, footer {
-            display: block;
-        }
-
-        * {
-            font-size: 14pt;
-            font-family: 'Titillium Web', sans-serif;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            font-size: 3em;
-            color: #FFF;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 0.1em rgba(0, 0, 0, 1);
-        }
-
-        h2 {
-            font-size: 1em;
-            color: #FFF;
-        }
-
-        a {
-            color: #FFF;
-        }
-
-        body {
-            background: url("./img/background.jpg");
-            background-size: 30em 30em;
-            text-align: center;
-        }
-
-        input[type=text] {
-            padding: 0.5em 1em 0.5em 1em;
-        }
-
-        .head_holder {
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            text-align: left;
-            padding: 0.5em 1em 0.5em 1em;
-
-            background-color: #0F0F0F;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #FFF;
-        }
-
-        .head_holder a {
-            color: #FFF;
-            text-decoration: none;
-        }
-
-        .panel {
-            padding-left: 0.5em;
-            padding-right: 0.5em;
-        }
-
-        .panel:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #0F0F0F;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: -1;
-        }
-
-        section.article {
-            width: 100%;
-            max-width: 35em;
-            margin: 0 auto;
-        }
-
-        section.article input {
-            width: 100%;
-            display: block;
-        }
-
-        section.article .input_button {
-            width: 100%;
-            font-size: 1.2em;
-            padding: 0.5em 1em 0.5em 1em;
-            margin-bottom: 1em;
-            background-color: #FFF;
-            box-shadow: none;
-            border: 1px solid #4aa3df;
-            color: #4aa3df;
-            font-weight: bold;
-        }
-
-        section.article .input_button:hover {
-            cursor: pointer;
-        }
-
-        textarea {
-            width: 100%;
-            height: 8em;
-            max-width: 35em;
-            padding: 0.5em 1em 0.5em 1em;
-        }
-    </style>
 </head>
 <body>
-<header class="head_holder"><a href="https://github.com/hsol/giant-cookie">< back to GitHub</a></header>
-<section class="panel">
+<header id="header"><a href="https://hsol.github,io/event-relay-listener">< back to GitHub</a></header>
+<section id="wrapper">
     <header>
-        <h1>Event Relay Listener example</h1>
+        <h1>Event Relay Listener</h1>
     </header>
     <article>
+        <div class="panel">
+            <h1>Introduction</h1>
+            <p>This library can be used when you want to hook various event listeners continuously.</p>
+            <p>You can apply this to any tag like &lt;FORM&gt;, &lt;BUTTON&gt;, &lt;INPUT&gt; etc...</p>
+        </div>
+        <div class="panel">
+            <h1>Example</h1>
+            <h3>Double confirm before submit(<a href="./example.html"><i>go to example</i></a>).</h3>
+            <h4>Code<i>(formDataExtension.js)</i></h4>
+            <pre><code class="js">
+                var eventRelayListener = new EventRelayListener(true);
+                eventRelayListener.setAttr('data-actions');
+                eventRelayListener.addAction('confirm', function (event) {
+                  var confirmMessage = event.currentTarget.getAttribute('data-confirm-text');
+                  if (!confirm(confirmMessage)) {
+                    event.preventDefault();
+                    return false;
+                  }
 
+                  return true;
+                });
+                eventRelayListener.addAction('reconfirm', function (event) {
+                  if (!confirm('Really submit?')) {
+                    event.preventDefault();
+                    return false;
+                  }
+
+                  return true;
+                });
+            </code></pre>
+            <h4>Code<i>(example.html)</i></h4>
+            <pre><code class="html">
+                &lt;form id="example" action="javascript:alert('It works.');"
+                    data-confirm-text="This is EventRelayListener Test Message." data-actions="confirm reconfirm"&gt;
+                    &lt;button id="submit-to-test"&gt;Submit to test&lt;/button&gt;
+                &lt;/form&gt;
+                &lt;script&gt;
+                    var eventRelayListener = new EventRelayListener(true);
+                    document.getElementById('example').addEventListener('submit', eventRelayListener.listener);
+                &lt;/script&gt;
+            </code></pre>
+        </div>
+        <div class="panel">
+            <h1>Initialization</h1>
+            <h3>EventRelayListener(<em>boolean isGlobal</em>)</h3>
+            <p>"isGlobal" means action array is in global variable.</p>
+            <br>
+            <h4>Example</h4>
+            <pre><code class="js">
+                var eventRelayListener = new EventRelayListener(); // not global action
+                var eventRelayListener = new EventRelayListener(false); // not global action
+                var eventRelayListener = new EventRelayListener(true); // global action
+            </code></pre>
+        </div>
+        <div class="panel">
+            <h1>Methods</h1>
+            <ul>
+                <li>
+                    <h3><i>EventRelayListener</i>.initActions(<em>array|null callableArray</em>)</h3>
+                    <p>Init actions by custom array what contains function to execute.</p>
+                    <p><i>(When callableArray is null, It just remove all action)</i></p>
+                    <br>
+                    <h4>Example</h4>
+                    <pre><code class="js">
+                            eventRelayListener.initActions({
+                                action: function () {
+                                    return [true, 'Example for init actions'];
+                                },
+                                actionWillRemove: function () {
+                                    return 'This action is will remove soon'.
+                                }
+                            });
+                    </code></pre>
+                </li>
+                <li>
+                    <h3><i>EventRelayListener</i>.addAction(<em>string functionName</em>,<em>function callable</em>)</h3>
+                    <p>Add action by custom array what contains function to execute with name.</p>
+                    <br>
+                    <h4>Example</h4>
+                    <pre><code class="js">
+                            eventRelayListener.addAction('addedAction', function () {
+                                alert('I was added!');
+                                return [true, 'Example for add action'];
+                            });
+                    </code></pre>
+                </li>
+                <li>
+                    <h3><i>EventRelayListener</i>.removeAction(<em>string functionName</em>)</h3>
+                    <p>Remove action by action name.</p>
+                    <br>
+                    <h4>Example</h4>
+                    <pre><code class="js">
+                            eventRelayListener.removeAction('actionWillRemove');
+                    </code></pre>
+                </li>
+                <li>
+                    <h3><i>EventRelayListener</i>.on(<em>string actionType</em>,<em>function callable</em>)</h3>
+                    <p>Call custom function when action execute.</p>
+                    <br>
+                    <h4>Example</h4>
+                    <pre><code class="js">
+                            eventRelayListener.on('action', function (_actionDto dto) {
+                                console.log({
+                                  index: dto.index,
+                                  type: dto.type,
+                                  action: dto.action,
+                                  time: dto.time,
+                                  response: dto.response
+                                });
+                            });
+                    </code></pre>
+                </li>
+                <li>
+                    <h3><i>EventRelayListener</i>.setAttr(<em>string attrName</em>)</h3>
+                    <p>Sets the attribute name to be used by the listener. <i>(Defaults is 'data-actions')</i></p>
+                    <br>
+                    <h4>Example</h4>
+                    <pre><code class="js">
+                            eventRelayListener.setAttr('data-actions');
+                    </code></pre>
+                </li>
+                <li>
+                    <h3><i>EventRelayListener</i>.listener(<em>object event</em>,<em>array|null actions</em>)</h3>
+                    <p>Get event listener that execute actions continuous start from the first action.</p>
+                    <p><i>(If you not set actions, It use tag's attribute value)</i></p>
+                    <br>
+                    <h4>Example</h4>
+                    <pre><code class="html">
+                        &lt;button id="target" data-actions="action addedAction"&gt;&lt;/button&gt;
+                        &lt;script&gt;
+                            document.getElementById('target').addEventListener('click', eventRelayListener.listener);
+                        &lt;/script&gt;
+                    </code></pre>
+                </li>
+            </ul>
+        </div>
     </article>
 </section>
-<footer><h2>Copyright 2016. <a href="https://github.com/hsol">HansolLim</a> all rights reserved.</h2></footer>
+<footer id="footer">
+    <h2>Copyright 2017. <a href="https://github.com/hsol">HansolLim</a> all rights reserved.</h2>
+</footer>
 </body>
 <script>
-  window.onload = function (event) {
-    verticalCenter();
-  };
-  window.onresize = function (event) {
-    verticalCenter();
-  };
-  function verticalCenter() {
-    document.getElementsByClassName("panel")[0].style.marginTop = (window.innerHeight - document.getElementsByClassName("panel")[0].clientHeight) / 2 + "px";
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
+  if (!('flex' in document.documentElement.style)) {
+    window.onload = window.onresize = function () {
+      var wrapper = document.getElementById("wrapper");
+      wrapper.height = window.innerHeight;
+      wrapper.style.marginTop = (window.innerHeight - wrapper.clientHeight) / 2 + "px";
+    };
+  }
+  hljs.initHighlightingOnLoad();
+
+  if(window.location.hash === '#worked') {
+    alert('It worked.');
+    window.location.hash = '';
   }
 </script>
 </html>

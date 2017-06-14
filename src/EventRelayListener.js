@@ -20,8 +20,15 @@ var initActions = function (isGlobal) {
   return isGlobal ? EventRelayListener.__proto__._actions : {};
 };
 
+var initDataAttribute = function () {
+  if (!EventRelayListener.__proto__._attrName) {
+    EventRelayListener.__proto__._attrName = 'data-actions';
+  }
+};
+
 window.EventRelayListener = function (isGlobal) {
   var _actionListener = new Function();
+  var _eachActionListener = {};
   var _actionDto = function (index, type, action, responseDto) {
     return {
       index: index,
@@ -31,13 +38,24 @@ window.EventRelayListener = function (isGlobal) {
       response: responseDto
     };
   };
-  var _responseDto = function (isPassed, message) {
-    return {
-      isPassed: isPassed === true,
-      message: message || ''
+  var _responseDto = function (first, second) {
+    var dto = {
+      isPassed: false,
+      data: null
     };
+
+    if (typeof first === 'boolean') {
+      dto.isPassed = first === true;
+      dto.data = second;
+    } else {
+      dto.isPassed = true;
+      dto.data = first;
+    }
+
+    return dto;
   };
 
+  initDataAttribute();
   var _actions = initActions(isGlobal === true);
 
   return {
@@ -46,7 +64,7 @@ window.EventRelayListener = function (isGlobal) {
         return true;
       });
 
-      for(var key in actions) {
+      for (var key in actions) {
         _actions[key] = actions[key];
       }
       return true;
@@ -69,14 +87,21 @@ window.EventRelayListener = function (isGlobal) {
 
       return true;
     },
-    on: function (eventType, callable) {
-      if (typeof eventType === 'function') {
+    on: function (actionType, callable) {
+      if (typeof actionType === 'function') {
         _actionListener = callable;
+      } else if (typeof actionType === 'string') {
+        _eachActionListener[actionType] = callable;
       }
+
+      throw new Error('[EventRelayListener] Can not find action type: ' + actionToRemove);
+    },
+    setAttr: function (attrName) {
+      EventRelayListener.__proto__._attrName = attrName;
     },
     listener: function (event, actions) {
       var eventResponse = false;
-      actions = actions || (event.currentTarget.getAttribute('data-actions') || '').split(' ');
+      actions = actions || (event.currentTarget.getAttribute(EventRelayListener.__proto__._attrName) || '').split(' ');
 
       actions.every(function (actionType, index) {
         var actionEvent = _actions[actionType];
@@ -94,8 +119,19 @@ window.EventRelayListener = function (isGlobal) {
           rawResponse = [false, error.message];
         }
 
-        response = _responseDto.apply(null, rawResponse);
-        _actionListener(new _actionDto(index, actionType, actionEvent, response));
+        if (Array.isArray(rawResponse)) {
+          response = _responseDto.apply(null, rawResponse);
+        } else {
+          response = _responseDto.call(null, rawResponse);
+        }
+
+        var actionDto = new _actionDto(index, actionType, actionEvent, response);
+
+        _actionListener(actionDto);
+
+        if (_eachActionListener[actionType]) {
+          _eachActionListener[actionType](actionDto);
+        }
 
         return eventResponse = response.isPassed;
       });

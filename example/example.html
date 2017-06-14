@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta property="og:title" content="Form Data Extension Example">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="http://hsol.github.io/form-data-extension">
+    <meta property="og:description" content="Use unlimited form tag with Form Data Extension.">
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <script src="../src/EventRelayListener.js"></script>
+    <style>
+        form {
+            padding-top: 1em;
+            text-align: right;
+        }
+
+        #submit-to-test {
+            border: 0;
+            padding: 0.3em 1em;
+            margin: 0;
+            color: #FFF;
+            cursor: pointer;
+            background-color: #34495e;
+        }
+
+        #submit-to-test:hover {
+            background-color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+<header id="header"><a href="https://github.com/hsol/event-relay-listener">< back to GitHub</a></header>
+<section id="wrapper">
+    <header>
+        <h1>Event Relay Listener Example</h1>
+    </header>
+    <article>
+        <div class="panel">
+            <h1>Example</h1>
+            <h3>Double confirm before submit.</h3>
+            <form id="example" action="./#worked"
+                  data-confirm-text="This is EventRelayListener Test Message." data-actions="confirm reconfirm">
+                <button id="submit-to-test">Submit to test</button>
+            </form>
+        </div>
+    </article>
+</section>
+<footer id="footer">
+    <h2>Copyright 2017. <a href="https://github.com/hsol">HansolLim</a> all rights reserved.</h2>
+</footer>
+</body>
+<script src="js/formDataExtension.js"></script>
+<script>
+  if (!('flex' in document.documentElement.style)) {
+    window.onload = window.onresize = function () {
+      var wrapper = document.getElementById("wrapper");
+      wrapper.height = window.innerHeight;
+      wrapper.style.marginTop = (window.innerHeight - wrapper.clientHeight) / 2 + "px";
+    };
+  }
+
+  var eventRelayListener = new EventRelayListener(true);
+  document.getElementById('example').addEventListener('submit', eventRelayListener.listener);
+</script>
+</html>
