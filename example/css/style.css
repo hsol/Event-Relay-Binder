@@ -19,6 +19,7 @@ body {
     background: url("../img/background.jpg");
     background-size: 30em 30em;
     text-align: center;
+    font-size:11pt;
 }
 
 header#header {
@@ -146,4 +147,28 @@ section#wrapper > article > div.panel ul li pre {
 footer#footer {
     padding: 1em;
     color: #FFF;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 10pt;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    body {
+        font-size: 9pt;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    body {
+        font-size: 8pt;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    body {
+        font-size: 7pt;
+    }
 }
